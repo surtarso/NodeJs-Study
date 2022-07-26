@@ -10,10 +10,11 @@
     "test:integration": "jest tests",
     "start": "node ./build/index.js",
     "build": "rm -rf ./build && tsc",
-    "service:dev": "export PORT=5001 && yarn build && yarn start",
-    "service:prod": "export PORT=5000 && yarn build && yarn start",
+    "service:dev": "export PORT=8001 && yarn build && yarn start",
+    "service:prod": "export PORT=8000 && yarn build && yarn start",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix --ext .js,.ts ."
+    "lint:fix": "eslint --fix --ext .js,.ts .",
+    "dev": "export PORT=8000 && ts-node-dev src/index.ts"
   },
   "keywords": [],
   "author": "",

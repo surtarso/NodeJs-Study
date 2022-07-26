@@ -2,6 +2,8 @@ import { makeMockResponse } from '../__mocks__/mockResponse'
 import { makeMockRequest } from '../__mocks__/mockRequest'
 import { MessageController } from './MessageController'
 
+//faz referencia ao teste unitario do controller
+
 describe('MessageController', () => {
   it('Should show a wellcome message', async () => {
     const messageController = new MessageController()

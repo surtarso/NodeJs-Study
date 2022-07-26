@@ -9,7 +9,9 @@ export class UserRepository {
       this.manager = manager
     }
 
+    //retorna uma promise
     save = async (user: User): Promise<User> => {
+      //recebe um objeto user e salva
       const newUser: User = await this.manager.save(user)
       return newUser
     }
