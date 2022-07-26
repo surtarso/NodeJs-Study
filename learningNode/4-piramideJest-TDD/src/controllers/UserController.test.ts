@@ -8,11 +8,12 @@ import { response } from 'express'
 
 const mockUser: User = getMockUser()
 
+let mockReturnCreateUser
 jest.mock('../services/UserService', () => {
     return {
         UserService: jest.fn().mockImplementation(() => {
             return {
-                createUser: jest.fn().mockImplementation(() => Promise.resolve(mockUser))
+                createUser: mockReturnCreateUser
             }
         })
     }
@@ -31,7 +32,7 @@ describe('user controller', () => {
 
     const response = makeMockResponse()
     it('retornar 201 e usuario criado', async () => {
-        jest.fn().mockImplementation(() => Promise.resolve(mockUser))
+        mockReturnCreateUser = jest.fn().mockImplementation(() => Promise.resolve(mockUser))
         await userController.createUser(request,response)
         expect(response.state.status).toBe(201)
         expect(response.state.json).toHaveProperty('user_id')
@@ -50,5 +51,13 @@ describe('user controller', () => {
         } as Request
         await userController.createUser(request,response)
         expect(response.state.status).toBe(400)
+    })
+
+    it('deve retornar status 500 qnd houver um erro', async () => {
+        mockReturnCreateUser = jest.fn().mockImplementation(() => {
+            throw new Error()
+        })
+        await userController.createUser(request,response)
+        expect(response.state.status).toBe(500)
     })
 })
