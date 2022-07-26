@@ -5,10 +5,6 @@ export class UserController {
   async createUser (request: Request, response: Response): Promise<Response> {
     const { name, email } = request.body
 
-    if(name.length < 1 || email.length < 1) {
-      return response.status(400).json({})
-    }
-
     const userService = new UserService({ name, email })
 
     try {
