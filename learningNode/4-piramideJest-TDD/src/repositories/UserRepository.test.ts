@@ -21,7 +21,8 @@ describe('testar user repository', () => {
     
         const userRepository = new UserRepository(managerMock)
         const user = await userRepository.save(mockUser)
-        //testa as propriedades do usuario mockado
+
+        //testa as propriedades explicitas do objeto usuario mockado
         expect(user).toHaveProperty('user_id')
         expect(user).toMatchObject({
             name: 'nome teste',
