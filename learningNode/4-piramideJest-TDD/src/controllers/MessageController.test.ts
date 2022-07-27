@@ -5,7 +5,7 @@ import { MessageController } from './MessageController'
 //faz referencia ao teste unitario do controller
 
 describe('MessageController', () => {
-  it('Should show a wellcome message', async () => {
+  it('Should show a welcome message', async () => {
     const messageController = new MessageController()
 
     const request = makeMockRequest({})
@@ -16,7 +16,7 @@ describe('MessageController', () => {
 
     expect(response.state.status).toBe(200)
     expect(response.state.json).toEqual({
-      message: 'Wellcome to TestsAPI'
+      message: 'Welcome to TestsAPI'
     })
   })
 })
