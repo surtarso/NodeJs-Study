@@ -6,6 +6,25 @@ import User from "../models/user.model";
 
 class UserRepository {
 
+    //---CREATE
+    async createUser(user:User): Promise<string> {
+        const script = `
+            INSERT INTO application_user (
+                username,
+                password
+            )
+            VALUES ($1, crypt($2, 'my_hash'))
+            RETURNING uuid
+        `;
+
+        const values = [user.username, user.password];
+        const { rows } = await db.query<{ uuid:string }>(script, values)
+        const [newUser] = rows;
+
+        return newUser.uuid;
+    }
+
+    //---READ (all)
     async findAllUsers():Promise<User[]> {
         const query = `
             SELECT uuid, username
@@ -16,7 +35,7 @@ class UserRepository {
 
         return rows || [];
     }
-
+    //---READ (one)
     async findById(uuid:string): Promise<User> {
         try {
             const query = `
@@ -35,24 +54,28 @@ class UserRepository {
             throw new DatabaseError('erro na consulta por ID', error);
         } 
     }
-
-    async createUser(user:User): Promise<string> {
-        const script = `
-            INSERT INTO application_user (
-                username,
-                password
-            )
-            VALUES ($1, crypt($2, 'my_hash'))
-            RETURNING uuid
+    //READ (user:pass) AUTH
+    async findByUsernamePassword(username: string, password: string): Promise<User | null> {
+        try{
+            const query = `
+            SELECT uuid, username
+            FROM application_user
+            WHERE username = $1
+            AND password = crypto($2, 'my_hash')
         `;
 
-        const values = [user.username, user.password];
-        const { rows } = await db.query<{ uuid:string }>(script, values)
-        const [newUser] = rows;
+        const values = [ username, password ];
+        const { rows } = await db.query<User>(query, values);
+        const [ user ] = rows;
+        return !user ? null : user;
+        // return user | null;
 
-        return newUser.uuid;
+        } catch (error) {
+            throw new DatabaseError('erro na consulta por user:pass', error);
+        }
     }
 
+    //---UPDATE
     async updateUser(user:User): Promise<void> {
         const script = `
             UPDATE application_user 
@@ -66,6 +89,7 @@ class UserRepository {
         await db.query(script, values);
     }
 
+    //---DELETE
     async removeUser(uuid: string): Promise<void> {
         const script = `
             DELETE
