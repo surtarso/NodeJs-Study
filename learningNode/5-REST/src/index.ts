@@ -2,8 +2,10 @@ import express from 'express';
 import statusRoute from './routes/status.route';
 import usersRoute from './routes/users.route';
 
-//configs do app
+//cria uma instancia do express
 const app = express();
+
+//configuracoes do app
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
