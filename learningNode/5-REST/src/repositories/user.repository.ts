@@ -61,7 +61,7 @@ class UserRepository {
             SELECT uuid, username
             FROM application_user
             WHERE username = $1
-            AND password = crypto($2, 'my_hash')
+            AND password = crypt($2, 'my_hash')
         `;
 
         const values = [ username, password ];
